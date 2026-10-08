@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0c1018">
+  <meta name="description" content="PrismParcel 棱彩邮包：把文字和文件变成像素图。支持无损恢复、可选密码加密与 16 色艺术编码，全部在本地浏览器完成。">
+  <title>PrismParcel — 图片数据封装</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="src/app.mjs" type="module"></script>
+</head>
+<body data-theme="dark">
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="PrismParcel 首页">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        <span class="brand-label">Prism<span>Parcel</span><small>棱彩邮包</small></span>
+      </a>
+      <div class="topbar-actions">
+        <span class="privacy-tag"><span class="pulse"></span>本地处理</span>
+        <button class="icon-button" id="theme-toggle" type="button" title="切换明暗主题" aria-label="切换明暗主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13a8.7 8.7 0 1 1-9.6-9.6 6.8 6.8 0 0 0 9.6 9.6z"/></svg>
+        </button>
+        <a class="icon-button github-link" href="https://github.com/LimAimo/PrismParcel" target="_blank" rel="noopener noreferrer" aria-label="访问 GitHub 仓库" title="查看 GitHub 项目">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .95a11.05 11.05 0 0 0-3.49 21.53c.55.1.76-.24.76-.54v-1.92c-3.1.68-3.75-1.32-3.75-1.32-.5-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.69.08-.69 1.12.08 1.71 1.14 1.71 1.14 1 .7 2.62.5 3.26.38.1-.73.39-1.23.71-1.52-2.48-.28-5.08-1.24-5.08-5.48 0-1.21.43-2.2 1.13-2.98-.12-.28-.49-1.41.11-2.94 0 0 .93-.3 3.04 1.14a10.5 10.5 0 0 1 5.53 0c2.11-1.44 3.04-1.14 3.04-1.14.6 1.53.23 2.66.12 2.94.7.78 1.12 1.77 1.12 2.98 0 4.25-2.6 5.2-5.08 5.47.4.35.75 1.04.75 2.1v3.13c0 .3.2.65.77.54A11.05 11.05 0 0 0 12 .95z"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <main id="top" class="page-main">
+      <section class="intro" aria-labelledby="hero-title">
+        <div class="intro-left">
+          
+          <h1 id="hero-title">把文件变成<span class="gradient-text">像素图片</span></h1>
+          <p class="intro-description">把文字或文件生成 PNG 图片，也能从图片原样还原。可以设置密码加密。</p>
+
+        </div>
+
+      </section>
+
+      <section class="workbench" aria-label="像素工作台">
+        <div class="workbench-head">
+          <div><p class="section-index">WORKSPACE</p><h2>像素工作台</h2></div>
+          
+        </div>
+        <div class="workspace-tabs" role="tablist" aria-label="选择工作模式">
+          <span class="tab-glider" id="tab-glider" aria-hidden="true"></span>
+          <button id="tab-encode" class="workspace-tab is-current" type="button" role="tab" aria-selected="true" aria-controls="panel-encode" tabindex="0" data-tab="encode"><span class="tab-symbol">↗</span> 制作图片</button>
+          <button id="tab-decode" class="workspace-tab" type="button" role="tab" aria-selected="false" aria-controls="panel-decode" tabindex="-1" data-tab="decode"><span class="tab-symbol">↙</span> 还原内容</button>
+        </div>
+
+        <section class="mode-panel" id="panel-encode" role="tabpanel" aria-labelledby="tab-encode">
+          <div class="workbench-grid">
+            <div class="setup-column">
+              <div class="panel-section source-section">
+                <div class="section-topline"><span class="step-no">01</span><h3>选择内容</h3></div>
+                <div class="choice-switch" role="radiogroup" aria-label="选择内容类型">
+                  <span class="choice-track" id="source-track" aria-hidden="true"></span>
+                  <button class="choice-button is-current" type="button" data-source="text" role="radio" aria-checked="true">文字</button>
+                  <button class="choice-button" type="button" data-source="file" role="radio" aria-checked="false">文件</button>
+                </div>
+                <div id="source-text-panel" class="source-input">
+                  <label for="plain-text" class="field-label">输入文字</label>
+                  <div class="text-area-wrap"><textarea id="plain-text" rows="6" spellcheck="false" placeholder="输入想要编码的文字"></textarea><span id="char-count" class="char-count">0 字符</span></div>
+                  <div class="sample-row"><span></span><button type="button" id="sample-button" class="text-link">填入示例</button></div>
+                </div>
+                <div id="source-file-panel" class="source-input" hidden>
+                  <label class="field-label" for="source-file">选择文件</label>
+                  <div class="dropzone" id="file-dropzone"><input id="source-file" type="file" class="sr-file" aria-label="上传需要封装的文件"><span class="upload-glyph" aria-hidden="true">＋</span><strong id="source-file-title">拖入文件，或点击选择</strong><span id="source-file-meta">最大约 12 MB</span></div>
+                </div>
+              </div>
+
+              <div class="panel-section settings-section">
+                <div class="section-topline"><span class="step-no">02</span><h3>图片样式</h3></div>
+                <p class="field-label palette-heading">像素调色板 <span id="palette-description">高密度 RGB · 文件更紧凑</span></p>
+                <div class="palette-grid" role="radiogroup" aria-label="选择图像颜色方案">
+                  <button class="palette-card is-selected" data-style="spectrum" type="button" role="radio" aria-checked="true"><span class="palette-preview palette-spectrum"></span><span>全色域</span><span class="palette-check" aria-hidden="true">✓</span></button>
+                  <button class="palette-card" data-style="aurora" type="button" role="radio" aria-checked="false"><span class="palette-preview palette-aurora"></span><span>极光</span><span class="palette-check" aria-hidden="true">✓</span></button>
+                  <button class="palette-card" data-style="sunset" type="button" role="radio" aria-checked="false"><span class="palette-preview palette-sunset"></span><span>落日</span><span class="palette-check" aria-hidden="true">✓</span></button>
+                  <button class="palette-card" data-style="graphite" type="button" role="radio" aria-checked="false"><span class="palette-preview palette-graphite"></span><span>石墨</span><span class="palette-check" aria-hidden="true">✓</span></button>
+                </div>
+                <div class="size-control"><div><label for="pixel-size" class="field-label">像素尺寸</label><span class="size-help">数字越大，色块越大</span></div><div class="range-control"><input id="pixel-size" type="range" min="1" max="8" value="3"><output id="pixel-size-value" for="pixel-size">3×</output></div></div>
+              </div>
+
+              <div class="panel-section protect-section">
+                <div class="section-topline"><span class="step-no">03</span><h3>压缩与加密</h3></div>
+                <label class="setting-toggle"><span class="toggle-description"><strong>密码保护 <span class="secure-flag">AES-256</span></strong><small>使用 AES-256-GCM 加密</small></span><input id="encryption-switch" type="checkbox" role="switch"><span class="switch-ui" aria-hidden="true"></span></label>
+                <div class="password-fields" id="encrypt-password-wrap" hidden>
+                  <label class="field-label" for="encrypt-password">设置密码（至少 8 个字符）</label><div class="password-box"><input id="encrypt-password" type="password" autocomplete="new-password" placeholder="输入一个你记得住的密码"><button type="button" class="reveal-button" data-reveal="encrypt-password" aria-label="显示或隐藏密码">显示</button></div>
+                  <p class="security-help">密码不会保存；丢失密码无法还原。</p>
+                </div>
+                <label class="setting-toggle compact-toggle"><span class="toggle-description"><strong>智能压缩</strong><small>压缩有效时自动启用</small></span><input id="compression-switch" type="checkbox" role="switch" checked><span class="switch-ui" aria-hidden="true"></span></label>
+              </div>
+              <button id="generate-button" class="primary-action" type="button"><span class="button-gleam" aria-hidden="true"></span><span id="generate-label">生成 PNG</span><span class="button-arrow" aria-hidden="true">↗</span></button>
+              <p class="local-footnote">全部在本地处理。</p>
+            </div>
+            <aside class="preview-column" aria-label="封装结果预览">
+              <div class="preview-toolbar"><div><span class="live-indicator"></span> PNG 预览</div><span id="preview-mode-label">等待生成</span></div>
+              <div class="preview-stage" id="preview-stage"><div class="stage-grid" aria-hidden="true"></div><div class="preview-placeholder" id="preview-placeholder"><div class="placeholder-art" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><strong>等待生成</strong><p>在左侧输入内容后生成</p></div><canvas id="result-canvas" class="result-canvas" hidden aria-label="编码后的 PNG 图像"></canvas></div>
+              <div class="preview-footer"><div class="preview-stat"><span>尺寸</span><strong id="stat-dimensions">—</strong></div><div class="preview-stat"><span>数据量</span><strong id="stat-size">—</strong></div><div class="preview-stat"><span>状态</span><strong id="stat-security">未生成</strong></div></div>
+              <div class="output-actions"><button id="download-button" type="button" class="secondary-action" disabled><span>↓</span> 下载 PNG</button><button id="reset-preview" type="button" class="quiet-action" title="清空预览" aria-label="清空预览" disabled>↺</button></div>
+              <p class="aside-tip"><span aria-hidden="true">✳</span> 请保留原始 PNG，不要缩放、截图或转成 JPEG。</p>
+            </aside>
+          </div>
+        </section>
+
+        <section class="mode-panel" id="panel-decode" role="tabpanel" aria-labelledby="tab-decode" hidden>
+          <div class="workbench-grid">
+            <div class="setup-column decode-column">
+              <div class="panel-section"><div class="section-topline"><span class="step-no">01</span><h3>选择 PNG 图片</h3></div><p class="decode-intro">自动识别图片里的数据和像素尺寸。</p>
+                <div class="dropzone decode-dropzone" id="image-dropzone"><input type="file" id="image-file" class="sr-file" accept="image/png" aria-label="上传需要解码的 PrismParcel PNG"><span class="upload-glyph image-upload-glyph" aria-hidden="true">⬡</span><strong id="image-file-title">拖入 PNG，或点击选择</strong><span id="image-file-meta">仅支持 PrismParcel 生成的 PNG</span></div>
+              </div>
+              <div class="panel-section"><div class="section-topline"><span class="step-no">02</span><h3>还原内容</h3></div><label class="field-label" for="decrypt-password">密码（如果当时设置过）</label><div class="password-box"><input type="password" id="decrypt-password" autocomplete="current-password" placeholder="没有密码可以留空"><button type="button" class="reveal-button" data-reveal="decrypt-password" aria-label="显示或隐藏密码">显示</button></div><p class="security-help">自动校验内容是否完整。</p></div>
+              <button class="primary-action" id="restore-button" type="button"><span class="button-gleam" aria-hidden="true"></span>还原内容<span class="button-arrow" aria-hidden="true">↘</span></button><p class="local-footnote">不支持旧版 TToIM 图片。</p>
+            </div>
+            <aside class="preview-column restored-column"><div class="preview-toolbar"><div><span class="live-indicator"></span> 还原结果</div><span id="restore-state">等待图片</span></div><div class="decode-result-stage"><div id="decode-placeholder" class="decode-placeholder"><span class="big-lock" aria-hidden="true">⌑</span><h3>等待还原</h3><p>选择 PNG 后点击还原。</p></div><div id="decode-result" hidden><div class="recovered-header"><span id="recovered-kind">TEXT</span><span id="recovered-protection">完整性已验证</span></div><h3 id="recovered-title">恢复完成</h3><p id="recovered-meta"></p><textarea id="recovered-text" readonly spellcheck="false" aria-label="恢复的文字内容" hidden></textarea><div id="recovered-file-card" class="recovered-file-card" hidden><span aria-hidden="true">▣</span><div><strong id="recovered-file-name">文件名</strong><small id="recovered-file-size"></small></div></div><div class="recovery-actions"><button id="recovered-download" class="secondary-action" type="button">↓ 下载恢复内容</button><button id="copy-text" class="quiet-action copy-action" type="button" hidden>复制文字</button></div></div></div><p class="aside-tip">请使用原始 PNG 图片。</p></aside>
+          </div>
+        </section>
+      </section>
+</main>
+    <footer class="footer"><a class="footer-brand" href="#top">PrismParcel</a><p>本地编码与还原</p><span>MIT LICENSE · 2026</span></footer>
+  </div>
+  <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+  <div id="busy-overlay" class="busy-overlay" aria-hidden="true"><div class="busy-box"><span class="busy-spinner" aria-hidden="true"></span><strong id="busy-title">正在处理像素…</strong><span id="busy-description">正在处理，请稍候</span></div></div>
+</body>
+</html>

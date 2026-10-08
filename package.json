@@ -1,0 +1,13 @@
+{
+  "name": "prismparcel",
+  "version": "2.1.0",
+  "private": true,
+  "type": "module",
+  "description": "PrismParcel — encode and encrypt data into pixel art, entirely in your browser.",
+  "scripts": {
+    "dev": "python3 -m http.server 5173",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --check src/codec.mjs && node --check src/app.mjs"
+  },
+  "engines": {"node": ">=20"}
+}
