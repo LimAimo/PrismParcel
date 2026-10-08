@@ -7,7 +7,7 @@ permissions:
   contents: write
 jobs:
   import:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '完成数据上传')
     runs-on: ubuntu-latest
     steps:
       - name: 拉取仓库
